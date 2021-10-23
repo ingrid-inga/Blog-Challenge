@@ -1,30 +1,25 @@
 package ar.com.alkemy.blog.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
-
-import ar.com.alkemy.blog.security.jwt.JWTTokenUtil;
+import ar.com.alkemy.blog.entities.*;
+import ar.com.alkemy.blog.security.jwt.*;
 import io.jsonwebtoken.Claims;
 
 @Service
 public class JWTUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserService userService;
+    private UsuarioService usuarioService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User u = userService.buscarPorUsername(username);
+        Usuario u = usuarioService.buscarPorUsername(username);
 
         if (u != null) {
             return new User(u.getUsername(), u.getPassword(), new ArrayList<>());

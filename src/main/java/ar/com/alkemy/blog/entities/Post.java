@@ -29,9 +29,9 @@ public class Post {
     private Date creationdate;
     
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name= "user_id", referencedColumnName = "user_id")
-    private User user;
+    @JsonIgnore
+    private Usuario usuario;
 
     public Integer getId() {
         return id;
@@ -81,13 +81,13 @@ public class Post {
         this.creationdate = creationdate;
     }
 
-    public User getUser() {
-        return user;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-        user.getPosts().add(this);
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+        usuario.getPosts().add(this);
     }
 
     

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ar.com.alkemy.blog.entities.User;
+import ar.com.alkemy.blog.entities.Usuario;
 import ar.com.alkemy.blog.security.Crypto;
 
 @SpringBootTest
@@ -25,12 +25,12 @@ class BlogApplicationTests {
 
 	@Test
 	void testearContraseña() {
-		User user = new User();
+		Usuario usuario = new Usuario();
 
-		user.setEmail("Diana@gmail.com");
-		user.setPassword("qp5TPhgUtIf7RDylefkIbw==");
+		usuario.setUsername("Diana@gmail.com");
+		usuario.setPassword("qp5TPhgUtIf7RDylefkIbw==");
 
-		assertFalse(!user.getPassword().equals(Crypto.encrypt("AbcdE23", user.getEmail().toLowerCase())));
+		assertFalse(!usuario.getPassword().equals(Crypto.encrypt("AbcdE23", usuario.getUsername().toLowerCase())));
 
 	}
 

@@ -10,20 +10,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.com.alkemy.blog.entities.User;
+import ar.com.alkemy.blog.entities.Usuario;
 import ar.com.alkemy.blog.models.request.*;
 import ar.com.alkemy.blog.models.response.LoginResponse;
 import ar.com.alkemy.blog.models.response.RegistrationResponse;
 import ar.com.alkemy.blog.security.jwt.JWTTokenUtil;
 import ar.com.alkemy.blog.services.JWTUserDetailsService;
-import ar.com.alkemy.blog.services.UserService;
+import ar.com.alkemy.blog.services.UsuarioService;
 
 @RestController
 
 public class AuthController {
     @Autowired
-    UserService userService;
-
+    UsuarioService service;
 
     @Autowired
     private JWTTokenUtil jwtTokenUtil;
@@ -31,17 +30,16 @@ public class AuthController {
     @Autowired
     private JWTUserDetailsService userDetailsService;
 
-
     @PostMapping("api/auth/sign_up")
     public ResponseEntity<RegistrationResponse> postRegisterUser(@RequestBody RegistrationRequest req,
             BindingResult results) {
         RegistrationResponse r = new RegistrationResponse();
 
-        User user = userService.crearUser(req.email, req.password);
+        Usuario usuario = service.crearUsuario(req.email, req.password);
 
         r.isOk = true;
-        r.message = "Te registraste con éxitoooo!!!!!!!";
-        r.userId = user.getUserId(); 
+        r.message = "Success!. You have been registered";
+        r.userId = usuario.getUserId(); 
 
         return ResponseEntity.ok(r);
 
@@ -51,10 +49,10 @@ public class AuthController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest authenticationRequest,
             BindingResult results) throws Exception {
 
-        User userLogueado = userService.login(authenticationRequest.username, authenticationRequest.password);
+        Usuario usuarioLogueado = service.login(authenticationRequest.username, authenticationRequest.password);
 
-        UserDetails userDetails = userService.getUserAsUserDetail(userLogueado);
-        Map<String, Object> claims = userService.getUserClaims(userLogueado);
+        UserDetails userDetails = service.getUserAsUserDetail(usuarioLogueado);
+        Map<String, Object> claims = service.getUserClaims(usuarioLogueado);
 
         // Genero los roles pero con los Claims(los propositos)
         // En este caso nuestros claims tienen info del tipo de usuario
@@ -65,7 +63,7 @@ public class AuthController {
         String token = jwtTokenUtil.generateToken(userDetails, claims);
 
         // Cambio para que devuelva el full perfil
-        User u = userService.buscarPorUsername(authenticationRequest.username);
+        Usuario u = service.buscarPorUsername(authenticationRequest.username);
 
         LoginResponse r = new LoginResponse();
         r.id = u.getUserId();
