@@ -1,6 +1,8 @@
 package ar.com.alkemy.blog.repos;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,7 +15,9 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findAll();
 
     Post findByTitle(String title);
+    Post findByPostId(Integer postId);
 
-    Post findByCategory(String category);
+    List<Post> findByCategory(String category);
+
     
 }

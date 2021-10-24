@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.*;
 @Entity
-@Table(name = "user")
+@Table(name = "usuario")
 
 public class Usuario {
     @Id
@@ -23,8 +23,6 @@ public class Usuario {
 
     @NaturalId
     private String username;
-
-    @NaturalId
     private String email;
     private String password;
 
@@ -61,6 +59,10 @@ public class Usuario {
     }
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+    public void addPost(Post p) {
+        this.posts.add(p);
+        p.setUsuario(this);
     }
     
 

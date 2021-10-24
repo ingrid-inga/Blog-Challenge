@@ -20,7 +20,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "post_id")
-    private Integer id;
+    private Integer postId;
 
     private String title;
     private String content;
@@ -33,12 +33,12 @@ public class Post {
     @JsonIgnore
     private Usuario usuario;
 
-    public Integer getId() {
-        return id;
+    public Integer getPostId() {
+        return postId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPostId(Integer postId) {
+        this.postId = postId;
     }
 
     public String getTitle() {

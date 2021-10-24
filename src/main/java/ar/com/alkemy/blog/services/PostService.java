@@ -1,13 +1,14 @@
 package ar.com.alkemy.blog.services;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ar.com.alkemy.blog.entities.Post;
 import ar.com.alkemy.blog.repos.PostRepository;
+import ar.com.alkemy.blog.repos.UsuarioRepository;
 
 @Service
 public class PostService {
@@ -15,16 +16,27 @@ public class PostService {
     @Autowired
     PostRepository repo;
 
-    public void createPost(Post post) {
-        repo.save(post);
+    @Autowired
+    UsuarioRepository urepo;
+
+    public boolean createPost(Post p) {
+        if(existe(p.getTitle()))
+        return false;
+        repo.save(p);
+        return true;  
+    }
+
+    public boolean existe(String title){
+        Post p = repo.findByTitle(title);
+        return p != null;
     }
 
     public List<Post> getPosts() {
         return repo.findAll();
     }
 
-    public Optional<Post> getPostById(Integer id) {
-        return repo.findById(id);
+    public Post getPostById(Integer postId) {
+        return repo.findByPostId(postId);
     }
 
     public void deleteById(Integer id) {
@@ -35,8 +47,16 @@ public class PostService {
         return repo.findByTitle(title);
     }
 
-    public Post findByCategory(String category) {
+    public List<Post> findByCategory(String category) {
         return repo.findByCategory(category);
+    }
+
+    public Post update(Post p) {
+        return repo.save(p);
+    }
+
+    public List<Post> postsByOrder() {
+        return this.getPosts().stream().sorted(Comparator.comparing(Post::getCreationdate).reversed()).collect(Collectors.toList());
     }
 
 

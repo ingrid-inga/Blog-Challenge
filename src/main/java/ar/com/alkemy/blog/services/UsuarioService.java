@@ -39,6 +39,7 @@ public class UsuarioService {
   public Usuario crearUsuario(String email, String password){
     Usuario u = new Usuario();
     u.setUsername(email);
+    u.setEmail(email);
     u.setPassword(Crypto.encrypt(password, email.toLowerCase()));
 
      repo.save(u);
@@ -88,6 +89,7 @@ public class UsuarioService {
 
     return authorities;
   }
+
 
 
 
