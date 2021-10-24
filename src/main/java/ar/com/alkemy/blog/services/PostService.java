@@ -2,7 +2,10 @@ package ar.com.alkemy.blog.services;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,9 @@ public class PostService {
 
     @Autowired
     UsuarioRepository urepo;
+
+    @Autowired
+    private EntityManager entityManager;
 
     public boolean createPost(Post p) {
         if(existe(p.getTitle()))
@@ -59,6 +65,14 @@ public class PostService {
         return this.getPosts().stream().sorted(Comparator.comparing(Post::getCreationdate).reversed()).collect(Collectors.toList());
     }
 
+    public Iterable<Post> findAll(boolean isDeleted){
+         Session session = entityManager.unwrap(Session.class);
+         Filter filter = session.enableFilter("deletedPostFilter");
+         filter.setParameter("isDeleted", isDeleted);
+         Iterable<Post> posts =  repo.findAll();
+         session.disableFilter("deletedPostFilter");
+         return posts;
+     }
 
 
 }

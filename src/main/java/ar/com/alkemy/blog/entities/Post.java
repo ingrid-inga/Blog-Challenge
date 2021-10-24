@@ -2,19 +2,18 @@ package ar.com.alkemy.blog.entities;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.ParamDef;
 @Entity
 @Table(name = "post")
+@SQLDelete(sql = "UPDATE post SET deleted = true WHERE post_id=?")
+@FilterDef(name = "deletedPostFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedPostFilter", condition = "deleted = :isDeleted")
 public class Post {
 
     @Id
@@ -32,6 +31,8 @@ public class Post {
     @JoinColumn(name= "user_id", referencedColumnName = "user_id")
     @JsonIgnore
     private Usuario usuario;
+
+    private boolean deleted = Boolean.FALSE;
 
     public Integer getPostId() {
         return postId;
@@ -90,7 +91,11 @@ public class Post {
         usuario.getPosts().add(this);
     }
 
-    
+    public boolean isDeleted() {
+        return deleted;
+    }
 
-
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }
